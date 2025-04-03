@@ -1,0 +1,8 @@
+.DS_Store
+config.yml
+config/*.json
+locales/*.json
+/.vscode
+node_modules
+coverage
+shopify.theme.toml
