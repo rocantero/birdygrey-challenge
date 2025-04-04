@@ -1,11 +1,11 @@
 module.exports = {
-  prefix: "twcss-",
+  // prefix: "tw-",
   content: [
-    "./layout/*.liquid",
-    "./templates/*.liquid",
-    "./templates/customers/*.liquid",
-    "./sections/*.liquid",
-    "./snippets/*.liquid",
+    "./sections/**.liquid",
+    "./templates/**.liquid",
+    "./snippets/**.liquid",
+    "./**/*.html",
+    "./**/*.js",
   ],
   theme: {
     screens: {
@@ -19,6 +19,10 @@ module.exports = {
     extend: {
       fontFamily: {
         heading: "var(--font-heading-family)",
+      },
+      aspectRatio: {
+        "9/12": "9 / 12",
+        "11/12": "11 / 12",
       },
     },
   },

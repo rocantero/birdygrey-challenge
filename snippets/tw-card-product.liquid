@@ -1,0 +1,148 @@
+{%- if card_product and card_product != empty -%}
+  <product-card
+    class="relative w-full"
+    data-product-handle="{{ card_product.handle }}"
+    data-product-id="{{ card_product.id }}"
+  >
+    {%- if card_product.available == false -%}
+      <div class="absolute top-0 left-0 p-2 md:p-8 z-10">
+        <span class="bg-primary text-white text-xs font-bold py-1 px-2 rounded">Sold Out</span>
+      </div>
+    {%- endif -%}
+    <div class="relative w-full aspect-11/12 lg:aspect-9/12 z-0">
+      {%- assign best_sellers_collection = collections['best-sellers'] -%}
+      {%- if best_sellers_collection and best_sellers_collection.products contains card_product -%}
+        <div class="absolute top-0 left-0 p-2 md:p-8 z-10">
+          <span class="bg-primary text-white text-xs font-bold py-1 px-2 rounded">Best Seller</span>
+        </div>
+      {%- endif -%}
+      <div class="absolute bottom-0 right-0 p-2 md:p-8 left-0 z-10 flex items-end pointer-events-none">
+        <div
+          class="border border-primary rounded-sm text-center bg-black text-white py-2 px-3 w-auto"
+          role="tooltip"
+        >
+          <p class="font-primary leading-none capitalize whitespace-nowrap text-xxs mt-[.063rem]">
+            <span class="font-tstar-pro text-base">best seller</span>
+          </p>
+        </div>
+      </div>
+      <a
+        href="{{ card_product.url }}"
+        class="select-none hover:cursor-pointer focus:outline-none w-full h-full  absolute z-0"
+      >
+        <div class="w-full">
+          <div class="group aspect-11/12 lg:aspect-9/12 relative flex items-center justify-center overflow-hidden object-cover">
+            <div class="absolute inset-0 bg-white transition-opacity duration-100 ease-in-out opacity-100 hover:opacity-0">
+              <img
+                loading="eager"
+                decoding="async"
+                srcset="
+                  {%- if card_product.featured_media.width >= 165 -%}{{ card_product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if card_product.featured_media.width >= 360 -%}{{ card_product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if card_product.featured_media.width >= 533 -%}{{ card_product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if card_product.featured_media.width >= 720 -%}{{ card_product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if card_product.featured_media.width >= 940 -%}{{ card_product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+                  {%- if card_product.featured_media.width >= 1066 -%}{{ card_product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                  {{ card_product.featured_media | image_url }} {{ card_product.featured_media.width }}w
+                "
+                src="{{ card_product.featured_media | image_url: width: 533 }}"
+                sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                alt="{{ card_product.featured_media.alt | escape }}"
+                class="inline-block w-full h-full object-cover h-full w-full transform bg-white bg-cover bg-center object-center transition-opacity duration-100 ease-in-out"
+                {% unless lazy_load == false %}
+                  loading="lazy"
+                {% endunless %}
+                width="{{ card_product.featured_media.width }}"
+                height="{{ card_product.featured_media.height }}"
+              >
+            </div>
+            <div class="absolute inset-0 bg-white transition-opacity duration-100 ease-in-out opacity-0 hover:opacity-100">
+              {%- assign second_image = card_product.media[1] -%}
+              {%- if second_image -%}
+                <img
+                  loading="eager"
+                  decoding="async"
+                  srcset="
+                    {%- if second_image.width >= 165 -%}{{ second_image | image_url: width: 165 }} 165w,{%- endif -%}
+                    {%- if second_image.width >= 360 -%}{{ second_image | image_url: width: 360 }} 360w,{%- endif -%}
+                    {%- if second_image.width >= 533 -%}{{ second_image | image_url: width: 533 }} 533w,{%- endif -%}
+                    {%- if second_image.width >= 720 -%}{{ second_image | image_url: width: 720 }} 720w,{%- endif -%}
+                    {%- if second_image.width >= 940 -%}{{ second_image | image_url: width: 940 }} 940w,{%- endif -%}
+                    {%- if second_image.width >= 1066 -%}{{ second_image | image_url: width: 1066 }} 1066w,{%- endif -%}
+                    {{ second_image | image_url }} {{ second_image.width }}w
+                  "
+                  src="{{ second_image | image_url: width: 533 }}"
+                  sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+                  alt="{{ second_image.alt | escape }}"
+                  class="inline-block w-full h-full object-cover h-full w-full transform bg-white bg-cover bg-center object-center transition-opacity duration-100 ease-in-out"
+                  {% unless lazy_load == false %}
+                    loading="lazy"
+                  {% endunless %}
+                  width="{{ second_image.width }}"
+                  height="{{ second_image.height }}"
+                >
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="w-full p-2 md:p-4">
+      <a href="{{card_product.url}}" class="select-none hover:cursor-pointer focus:outline-none   text-left">
+        {% if card_product.options contains 'Color' %}
+          <div class="flex justify-between items-start gap-2 md:gap-4 mb-3">
+            <div class="relative max-w-full mt-1.5 inline-flex justify-start">
+              <ul class="mx-auto flex list-none justify-start md:flex-wrap gap-4 max-w-full flex-wrap hover:">
+                {% for color_option in card_product.options_by_name.Color.values %}
+                  {% assign background_style = '' %}
+                  {% for variant in card_product.variants %}
+                    {% if variant.options contains color_option %}
+                      {%- assign variant_id = variant.id -%}
+                      {% if variant.image %}
+                        {% assign background_style = 'url(https://birdygrey-roost.myshopify.com/cdn/shop/'
+                          | append: variant.image.src
+                          | append: '?width=200)'
+                        %}
+                        {% break %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                  <li class="relative flex items-center px-0.5 py-0.5 md:!px-0  cursor-pointer">
+                    <div class="relative text-center flex items-center justify-center overflow-visible w-10 h-10 text-[#807f7e]">
+                      <label
+                        data-color-name="{{ color_option }}"
+                        for="{{ card_product.id }}_color_{{ forloop.index }}"
+                        class="relative mb-1 mt-1 inline-block h-10 w-10 outline outline-1 outline-offset-1 bg-size-50px bg-center hover:outline-2 "
+                        style="background-image: {{ background_style }};"
+                      >
+                        <input
+                          type="radio"
+                          class="absolute left-0 top-0 bottom-0 right-0 opacity-0"
+                          name="{{ card_product.id }}_card_color"
+                          id="{{ card_product.id }}_color_{{ forloop.index }}"
+                          value="{{ variant_id }}"
+                        >
+                      </label>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+
+        {%- if card_product.metafields.custom.material and card_product.metafields.custom.material != blank -%}
+          <p class="font-quinary uppercase text-xl mb-1.5  md:!mb-2">
+            {{ card_product.metafields.custom.material }}
+          </p>
+        {%- endif -%}
+        <h2 class="text-4xl  mb-1.5 md:mb-2 font-tstar-pro">
+          {{ card_product.title | escape }}
+        </h2>
+        <p class="">
+          {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+        </p>
+      </a>
+    </div>
+  </product-card>
+{%- endif -%}

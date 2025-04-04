@@ -43,6 +43,13 @@
       assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
     %}
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+      rel="stylesheet"
+    >
+
     {% style %}
       {{ settings.type_body_font | font_face: font_display: 'swap' }}
       {{ body_font_bold | font_face: font_display: 'swap' }}
@@ -249,9 +256,24 @@
           font-size: 1.6rem;
         }
       }
+      @font-face {
+          font-family: 'Tstar Pro';
+            src: url('{{ 'tstarpro-headline-webfont.woff2' | asset_url }}') format('woff2');
+          font-weight: normal;
+          font-style: normal;
+        }
+        .font-tstar-pro {
+          font-family: 'Tstar Pro', sans-serif;
+          font-weight: 700;
+        }
+        .font-roboto-mono {
+          font-family: 'Roboto Mono', sans-serif;
+          font-weight: 400;
+        }
     {% endstyle %}
     {{ 'app.css' | asset_url | stylesheet_tag }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'tailwind-output.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.type_body_font.system? -%}
       {% comment %}theme-check-disable AssetPreload{% endcomment %}
