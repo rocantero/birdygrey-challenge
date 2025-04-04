@@ -97,7 +97,7 @@
           </facet-filters-form>
         {%- endif -%}
 
-        <div class="flex w-full sticky top-[101px] z-10 bg-white">
+        <div class="flex w-full sticky top-0 z-10 bg-white">
           {{ 'component-facets.css' | asset_url | stylesheet_tag }}
           <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
           {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
@@ -137,24 +137,13 @@
                       | t: link: collection.url, class: 'underlined-link link'
                     }}
                   </h2>
-                  <p class="text-xs text-brown mt-2 pb-7 xl:text-sm"></p>
                 </div>
               </div>
             {%- else -%}
               <div
                 class="grid"
               >
-                <div class="stack mb-5 pb-8 border-b border-gray last:border-b-0 false ">
-                  <h2 class="title title--primary text-xl text-brown text-left font-primary leading-none xl:text-2xl">
-                    {{ collection.title -}}
-                    <br>
-                    {{
-                      'sections.collection_template.use_fewer_filters_html'
-                      | t: link: collection.url, class: 'underlined-link link'
-                    }}
-                  </h2>
-                  <p class="text-xs text-brown mt-2 pb-7 xl:text-sm">{{ collection.description }}</p>
-                </div>
+                <div class="stack mb-5 border-b border-gray last:border-b-0 false ">&nbsp;</div>
                 <div class="loading-overlay gradient"></div>
                 <ul
                   id="product-grid"
