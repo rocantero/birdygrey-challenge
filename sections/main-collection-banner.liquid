@@ -1,15 +1,7 @@
 {% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
-{%- style -%}
-  @media screen and (max-width: 749px) {
-    .collection-hero--with-image .collection-hero__inner {
-      padding-bottom: calc({{settings.media_shadow_vertical_offset | at_least: 0}}px + 2rem);
-    }
-  }
-{%- endstyle -%}
-
-<div class="mx-auto px-5 md:px-6 max-w-[1600px] mt-[1px] border-t border-grayLighter">
+<div class="mx-auto p-6 lg:p-20  max-w-[1600px] mt-[1px] border-t border-grayLighter">
   <div class="wrapper py-5">
     <h1 class="text-6xl text-brown text-left font-tstar-pro leading-none xl:text-3xl">
       <span class="visually-hidden">{{ 'sections.collection_template.title' | t }}: </span>
@@ -17,7 +9,7 @@
     </h1>
 
     {%- if section.settings.show_collection_description -%}
-      <p class="collection-hero__description rte text-xl text-primary mt-1">
+      <p class="text-xl text-primary mt-1">
         {{ collection.description }}
       </p>
     {%- endif -%}

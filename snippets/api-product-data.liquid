@@ -1,0 +1,149 @@
+{% comment %}
+  API endpoint that fetches product data using the Storefront API
+  This returns detailed variant information including prices, availability, and images
+{% endcomment %}
+
+<script type="application/json" id="storefront-api-config">
+  {
+    "shop": {
+      "domain": "{{ shop.permanent_domain }}",
+      "storefrontAccessToken": "{{ settings.storefront_api_access_token }}"
+    }
+  }
+</script>
+
+<script>
+  (function () {
+    // Create a product data cache
+    const productCache = {};
+
+    // Register the API endpoint
+    window.fetchProductData = async function (handle) {
+      // Check cache first
+      if (productCache[handle]) {
+        return productCache[handle];
+      }
+
+      // Get Storefront API config
+      const config = JSON.parse(document.getElementById('storefront-api-config').textContent);
+      const domain = config.shop.domain;
+      const storefrontAccessToken = config.shop.storefrontAccessToken;
+
+      // GraphQL query for product data
+      const query = `
+      {
+        product(handle: "${handle}") {
+          id
+          title
+          handle
+          options {
+            name
+            values
+          }
+          variants(first: 250) {
+            edges {
+              node {
+                id
+                title
+                availableForSale
+                quantityAvailable
+                selectedOptions {
+                  name
+                  value
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                image {
+                  url
+                  altText
+                  width
+                  height
+                }
+              }
+            }
+          }
+          images(first: 20) {
+            edges {
+              node {
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    `;
+
+      try {
+        // Make request to Shopify Storefront API
+        const response = await fetch(`https://${domain}/api/2023-07/graphql.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+          },
+          body: JSON.stringify({ query }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Storefront API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Transform the response to a more convenient format
+        const product = data.data.product;
+        const formattedProduct = {
+          id: product.id,
+          title: product.title,
+          handle: product.handle,
+          options: product.options,
+          variants: product.variants.edges.map((edge) => {
+            const variant = edge.node;
+            return {
+              id: variant.id.split('/').pop(), // Extract just the ID number
+              title: variant.title,
+              available: variant.availableForSale,
+              quantity: variant.quantityAvailable,
+              price: parseFloat(variant.price.amount) * 100, // Convert to cents to match Shopify's format
+              compare_at_price: variant.compareAtPrice ? parseFloat(variant.compareAtPrice.amount) * 100 : null,
+              options: variant.selectedOptions.reduce((acc, option) => {
+                acc[option.name] = option.value;
+                return acc;
+              }, {}),
+              featured_image: variant.image
+                ? {
+                    src: variant.image.url,
+                    alt: variant.image.altText,
+                    width: variant.image.width,
+                    height: variant.image.height,
+                  }
+                : null,
+            };
+          }),
+          images: product.images.edges.map((edge) => ({
+            src: edge.node.url,
+            alt: edge.node.altText,
+            width: edge.node.width,
+            height: edge.node.height,
+          })),
+        };
+
+        // Store in cache
+        productCache[handle] = formattedProduct;
+        return formattedProduct;
+      } catch (error) {
+        console.error('Error fetching product data via Storefront API:', error);
+        return null;
+      }
+    };
+  })();
+</script>

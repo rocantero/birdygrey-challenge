@@ -255,8 +255,8 @@
         body {
           font-size: 1.6rem;
         }
-
-        @font-face {
+      }
+      @font-face {
           font-family: 'Tstar Pro';
             src: url('{{ 'tstarpro-headline-webfont.woff2' | asset_url }}') format('woff2');
           font-weight: normal;
@@ -270,7 +270,6 @@
           font-family: 'Roboto Mono', sans-serif;
           font-weight: 400;
         }
-      }
     {% endstyle %}
     {{ 'app.css' | asset_url | stylesheet_tag }}
     {{ 'base.css' | asset_url | stylesheet_tag }}
